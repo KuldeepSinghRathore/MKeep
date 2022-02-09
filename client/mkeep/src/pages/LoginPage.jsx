@@ -1,0 +1,10 @@
+import { Login } from "components/Login"
+import React from "react"
+
+export const LoginPage = () => {
+  return (
+    <div>
+      <Login />
+    </div>
+  )
+}
