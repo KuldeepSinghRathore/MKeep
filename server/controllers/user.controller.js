@@ -6,20 +6,30 @@ const jwt = require("jsonwebtoken")
 // Signup User
 
 const signupUser = catchAsyncHandler(async (req, res, next) => {
-  const { email, password, name } = req.body
+  const { email, password, username } = req.body
+
+  if (!email || !password || !username) {
+    return next(new ErrorHandler("Please fill all fields", 400))
+  }
+  const pass = password.toString()
+  if (pass.length < 6) {
+    return next(
+      new ErrorHandler("Password must be at least 6 characters long", 400)
+    )
+  }
+
   const userFromDb = await User.findOne({ email })
   if (userFromDb) {
     return next(new ErrorHandler("User already exists", 400))
   }
   // bcrypt password
   // hashing password
-  let pass = password.toString()
   bcrypt.hash(pass, 10, async (err, hash) => {
     if (err) {
       return next(new ErrorHandler("Cannot create user", 500))
     }
     const newUser = new User({
-      name,
+      username,
       email,
       password: hash,
     })
@@ -39,7 +49,11 @@ const signupUser = catchAsyncHandler(async (req, res, next) => {
       message: "User Created Successfully",
       token,
       userId: saveNewUser._id,
-      name: saveNewUser.name,
+      username: saveNewUser.username,
+
+      email: saveNewUser.email,
+      labels: saveNewUser.labels,
+      token,
     })
   })
 })
@@ -48,10 +62,10 @@ const signupUser = catchAsyncHandler(async (req, res, next) => {
 const loginUser = catchAsyncHandler(async (req, res, next) => {
   const userFromBody = req.body
   const { email, password } = userFromBody
-  userFromBody.password = password.toString()
   if (!userFromBody.email || !userFromBody.password) {
     return next(new ErrorHandler("Please provide email and password", 400))
   }
+  userFromBody.password = password.toString()
 
   // finding user by email
   const userFromDb = await User.findOne({ email }).select("+password")
@@ -76,24 +90,27 @@ const loginUser = catchAsyncHandler(async (req, res, next) => {
     message: "Login Successful",
 
     userId: userFromDb.id,
-    name: userFromDb.name,
+    username: userFromDb.username,
     email: userFromDb.email,
+    labels: userFromDb.labels,
     token,
   })
 })
 
 const userLabelUpdate = catchAsyncHandler(async (req, res, next) => {
-  const { userId } = req.params
-  const { labels } = req.body
+  const { userId } = req
+  const { label } = req.body
   const userFromDb = await User.findById(userId)
   if (!userFromDb) {
     return next(new ErrorHandler("User not found", 404))
   }
-  userFromDb.labels = labels
+  userFromDb.labels = userFromDb.labels.filter((item) => item !== label)
+
+  userFromDb.labels.push(label)
   const updatedUser = await userFromDb.save()
   res.status(200).json({
     success: true,
-    data: updatedUser,
+    labels: updatedUser.labels,
   })
 })
 module.exports = { signupUser, loginUser, userLabelUpdate }

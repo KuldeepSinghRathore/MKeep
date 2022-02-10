@@ -2,7 +2,8 @@ const catchAsyncHandler = require("../middlewares/catchAsyncHandler")
 const { Note } = require("../models/notes.model")
 
 const addNote = catchAsyncHandler(async (req, res, next) => {
-  const newNote = new Note(req.body)
+  const { userId } = req
+  const newNote = new Note({ ...req.body, userId })
 
   const note = await newNote.save()
   res.status(200).json({
@@ -12,7 +13,8 @@ const addNote = catchAsyncHandler(async (req, res, next) => {
 })
 
 const getAllNotes = catchAsyncHandler(async (req, res, next) => {
-  const notes = await Note.find()
+  const { userId } = req
+  const notes = await Note.find({ userId })
   res.status(200).json({
     success: true,
     notes,
@@ -42,7 +44,6 @@ const updateNote = catchAsyncHandler(async (req, res, next) => {
   //     ...(req.body.color && { color: req.body.color }),
   //     ...(req.body.label && { label: req.body.label }),
   //   }
-  console.log(noteFromBody, "noteFromBody")
   const note = Object.assign(noteFromDb, noteFromBody)
   const updatedNote = await note.save()
   res.status(200).json({

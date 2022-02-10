@@ -2,21 +2,26 @@ import React, { useEffect } from "react"
 import { NoteCard } from "components/NoteCard"
 import { useDispatch, useSelector } from "react-redux"
 import { getAllNotes } from "./notesSlice"
+import { resetStatus } from "features/user/userSlice"
 
 export const NotesList = () => {
-  const { status, notes } = useSelector((state) => state.notes)
+  const { notes } = useSelector((state) => state.notes)
+  const { token, isLoggedIn, status } = useSelector((state) => state.users)
   const dispatch = useDispatch()
-  console.log(status, "status", notes, "notes")
   useEffect(() => {
-    if (status === "idle") {
-      dispatch(getAllNotes())
-      console.log("notes fetched")
+    if (isLoggedIn) {
+      dispatch(resetStatus())
     }
-  }, [status, dispatch])
+  }, [dispatch, isLoggedIn])
+  useEffect(() => {
+    if (status === "fulfilled") {
+      dispatch(getAllNotes(token))
+    }
+  }, [dispatch, token, status])
 
   return (
     <>
-      <div className="md:w-7xl md:mx-auto   p-5">
+      <div className=" md:w-7xl md:mx-auto   p-5">
         <h2 className="font-bold w-[70vh] text-center text-xl ">Pinned</h2>
         <div className="  justify-center gap-3 flex flex-wrap mt-5">
           {notes

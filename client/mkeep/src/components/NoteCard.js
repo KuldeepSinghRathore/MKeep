@@ -3,12 +3,13 @@ import { FiEdit } from "react-icons/fi"
 import { BsFillPinAngleFill, BsPinAngle } from "react-icons/bs"
 import { RiDeleteBin2Fill } from "react-icons/ri"
 import { deleteNote, updateNote } from "features/notes/notesSlice"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { NotesForm } from "./NotesForm"
 
 export const NoteCard = ({ noteObj }) => {
   const dispatch = useDispatch()
   const [editMode, setEditMode] = useState(false)
+  const { token } = useSelector((state) => state.users)
   return editMode ? (
     <div className="   ">
       <NotesForm
@@ -34,20 +35,26 @@ export const NoteCard = ({ noteObj }) => {
         {noteObj.isPinned ? (
           <BsFillPinAngleFill
             size={"1.5em"}
-            onClick={() =>
-              dispatch(
-                updateNote({ _id: noteObj._id, isPinned: !noteObj.isPinned })
-              )
-            }
+            className="cursor-pointer"
+            onClick={() => {
+              const notesBody = {
+                _id: noteObj._id,
+                isPinned: !noteObj.isPinned,
+              }
+              dispatch(updateNote({ notesBody, token }))
+            }}
           />
         ) : (
           <BsPinAngle
             size={"1.5em"}
-            onClick={() =>
-              dispatch(
-                updateNote({ _id: noteObj._id, isPinned: !noteObj.isPinned })
-              )
-            }
+            className="cursor-pointer"
+            onClick={() => {
+              const notesBody = {
+                _id: noteObj._id,
+                isPinned: !noteObj.isPinned,
+              }
+              dispatch(updateNote({ notesBody, token }))
+            }}
           />
         )}
       </div>
@@ -57,12 +64,22 @@ export const NoteCard = ({ noteObj }) => {
       </div>
       <div className="flex justify-between">
         <span>
-          <FiEdit size={"1.5em"} onClick={() => setEditMode(true)} />
+          <FiEdit
+            size={"1.5em"}
+            className="cursor-pointer"
+            onClick={() => setEditMode(true)}
+          />
         </span>
 
         <RiDeleteBin2Fill
           size={"1.5em"}
-          onClick={() => dispatch(deleteNote(noteObj._id))}
+          className="cursor-pointer"
+          onClick={() => {
+            const notesBody = {
+              _id: noteObj._id,
+            }
+            dispatch(deleteNote({ notesBody, token }))
+          }}
         />
       </div>
     </div>

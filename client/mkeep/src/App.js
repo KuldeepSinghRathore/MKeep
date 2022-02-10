@@ -1,5 +1,8 @@
-import { LoginPage } from "pages/LoginPage"
-import { RegisterPage } from "pages/RegisterPage"
+import { Login } from "features/user/Login"
+import { LogOut } from "features/user/LogOut"
+import { SignUp } from "features/user/SignUp"
+import { Route, Routes } from "react-router-dom"
+import { PrivateRoutes } from "utils/PrivateRoutes"
 import { Header } from "./components/Header"
 import { HomePage } from "./pages/HomePage"
 
@@ -8,9 +11,26 @@ function App() {
     <div>
       <Header />
       <div className="md:max-w-6xl mx-auto mt-24  ">
-        <HomePage />
-        {/* <LoginPage /> */}
-        {/* <RegisterPage /> */}
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <PrivateRoutes>
+                <HomePage />
+              </PrivateRoutes>
+            }
+          />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route
+            path="/logout"
+            element={
+              <PrivateRoutes>
+                <LogOut />
+              </PrivateRoutes>
+            }
+          />
+        </Routes>
       </div>
     </div>
   )

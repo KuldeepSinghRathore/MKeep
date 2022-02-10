@@ -11,9 +11,13 @@ const initialState = {
 
 export const addNote = createAsyncThunk(
   "notes/addNote",
-  async (note, { rejectWithValue }) => {
+  async ({ notesBody, token }, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`${API}/notes/new`, note)
+      const response = await axios.post(`${API}/notes/new`, notesBody, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       // automatically available in the payload
       return response.data
     } catch (error) {
@@ -24,9 +28,13 @@ export const addNote = createAsyncThunk(
 )
 export const getAllNotes = createAsyncThunk(
   "notes/getAllNotes",
-  async (note, { rejectWithValue }) => {
+  async (token, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${API}/notes`)
+      const response = await axios.get(`${API}/notes`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
 
       return response.data
     } catch (error) {
@@ -38,9 +46,14 @@ export const getAllNotes = createAsyncThunk(
 
 export const deleteNote = createAsyncThunk(
   "notes/deleteNote",
-  async (noteId, { rejectWithValue }) => {
+  async ({ notesBody, token }, { rejectWithValue }) => {
     try {
-      const response = await axios.delete(`${API}/notes/${noteId}`)
+      const response = await axios.delete(`${API}/notes/${notesBody._id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
       return response.data
     } catch (error) {
       console.log(error)
@@ -50,9 +63,17 @@ export const deleteNote = createAsyncThunk(
 )
 export const updateNote = createAsyncThunk(
   "notes/updateNote",
-  async (note, { rejectWithValue }) => {
+  async ({ notesBody, token }, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`${API}/notes/${note._id}`, note)
+      const response = await axios.post(
+        `${API}/notes/${notesBody._id}`,
+        notesBody,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
       return response.data
     } catch (error) {
       console.log(error)

@@ -28,7 +28,7 @@ connectDb()
 
 // routes
 app.use("/api/v1", userRouter)
-app.use("/api/v1", noteRouter)
+app.use("/api/v1", verifyAuth, noteRouter)
 // error handling middleware
 app.use(errorMiddleware)
 
@@ -41,6 +41,7 @@ const server = app.listen(process.env.PORT, () => {
 // Handle unhandled promise rejections
 process.on("unhandledRejection", (err) => {
   console.log(`Error: ${err.message}`)
+
   console.log(`Shutting down server due to unhandled promise rejection`)
   // Close server & exit process
   server.close(() => process.exit(1))

@@ -14,7 +14,7 @@ export const HomePage = () => {
         <div className="md:flex-[0.2] md:max-w-[160px]">
           <SideBar />
         </div>
-        <div className=" md:flex-[0.8]">
+        <div className="w-[95%] mx-auto md:w-full md:flex-[0.8]">
           <div className="">
             <NotesForm />
           </div>

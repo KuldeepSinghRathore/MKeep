@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import { CirclePicker } from "react-color"
 import { MdOutlineColorLens, MdNewLabel } from "react-icons/md"
 import { BsFillPinAngleFill, BsPinAngle } from "react-icons/bs"
@@ -6,6 +6,7 @@ import { FaRegWindowClose } from "react-icons/fa"
 import { AiOutlineCloseCircle } from "react-icons/ai"
 import { useDispatch, useSelector } from "react-redux"
 import { addNote, updateNote } from "features/notes/notesSlice"
+import { addLabelPressed } from "features/user/userSlice"
 const initialState = {
   title: "",
   note: "",
@@ -17,8 +18,9 @@ const initialState = {
 export const NotesForm = ({ editMode, noteToEdit, setEditMode }) => {
   const [showColor, setShowColor] = useState(false)
   const [showAddLabel, setAddLabel] = useState(false)
+  const [labelState, setLabel] = useState("")
   const [notesBody, setNotesBody] = useState(noteToEdit || initialState)
-  const { status } = useSelector((state) => state.notes)
+  const { labels, token } = useSelector((state) => state.users)
   const dispatch = useDispatch()
   const handleChange = (e) => {
     setNotesBody({ ...notesBody, [e.target.name]: e.target.value })
@@ -26,16 +28,14 @@ export const NotesForm = ({ editMode, noteToEdit, setEditMode }) => {
   const handleSubmit = (e) => {
     e.preventDefault()
     if (editMode) {
-      dispatch(updateNote(notesBody))
+      dispatch(updateNote({ notesBody, token }))
       setEditMode(false)
     }
     if (!editMode) {
-      dispatch(addNote(notesBody))
+      dispatch(addNote({ notesBody, token }))
       setNotesBody(initialState)
     }
   }
-  // bg-[${color}]
-  console.log(status, "status here")
 
   return (
     <div
@@ -51,7 +51,7 @@ export const NotesForm = ({ editMode, noteToEdit, setEditMode }) => {
           <input
             type="text"
             placeholder="Title"
-            className="w-full mb-2 p-2 outline-none px-4 h-full py-2 text-lg"
+            className="w-full mb-2 p-2 bg-slate-50  outline-none px-4 h-full py-2 text-lg"
             value={notesBody.title}
             onChange={handleChange}
             name="title"
@@ -60,7 +60,7 @@ export const NotesForm = ({ editMode, noteToEdit, setEditMode }) => {
           {notesBody.isPinned ? (
             <BsFillPinAngleFill
               size={"2.5em"}
-              className="ml-5  mb-2 p-2"
+              className="ml-5  mb-2 p-2 cursor-pointer"
               onClick={() =>
                 setNotesBody({ ...notesBody, isPinned: !notesBody.isPinned })
               }
@@ -68,7 +68,7 @@ export const NotesForm = ({ editMode, noteToEdit, setEditMode }) => {
           ) : (
             <BsPinAngle
               size={"2.5em"}
-              className="ml-5  mb-2 p-2"
+              className="ml-5  mb-2 p-2 cursor-pointer"
               onClick={() =>
                 setNotesBody({ ...notesBody, isPinned: !notesBody.isPinned })
               }
@@ -88,14 +88,14 @@ export const NotesForm = ({ editMode, noteToEdit, setEditMode }) => {
           <select
             name="label"
             id=""
-            className="border-0 p-1 mr-1"
+            className="border-0 p-1 mr-1 cursor-pointer"
             onChange={handleChange}
             value={notesBody.label}
           >
             <option>Select Tag</option>
-            <option>work</option>
-            <option>todo</option>
-            <option>study</option>
+            {labels.map((label, index) => (
+              <option key={index}>{label}</option>
+            ))}
           </select>
 
           {showColor ? (
@@ -106,25 +106,40 @@ export const NotesForm = ({ editMode, noteToEdit, setEditMode }) => {
               }}
               name="color"
               value={notesBody.color}
-              className="p-3 "
+              className="p-3 cursor-pointer"
             />
           ) : (
             <MdOutlineColorLens
               onClick={() => setShowColor((prev) => !prev)}
               size={"2rem"}
-              className="mr-1"
+              className="mr-1 cursor-pointer"
             />
           )}
 
           {showAddLabel ? (
             <div className="flex">
-              <input type="text" placeholder="Add New Label" />
+              <input
+                type="text"
+                placeholder="Add New Label"
+                value={labelState}
+                onChange={(e) => setLabel(e.target.value)}
+              />
               <AiOutlineCloseCircle
                 size={"2rem"}
-                className="ml-2 mr-2"
+                className="ml-2 mr-2 cursor-pointer"
                 onClick={() => setAddLabel((prev) => !prev)}
               />
-              <button className="py-1 px-2 bg-slate-200">Add</button>
+              <button
+                className="py-1 px-2 bg-slate-200"
+                onClick={() => {
+                  const label = { label: labelState }
+                  dispatch(addLabelPressed({ label, token }))
+                  setAddLabel(false)
+                  setLabel("")
+                }}
+              >
+                Add
+              </button>
             </div>
           ) : (
             <MdNewLabel
@@ -135,12 +150,12 @@ export const NotesForm = ({ editMode, noteToEdit, setEditMode }) => {
           <input
             type="submit"
             value={editMode ? "Update" : "Save"}
-            className="px-3 py-1 bg-gray-200 rounded-md"
+            className="px-3 py-1 bg-gray-200 rounded-md cursor-pointer"
           />
-          {/* <button className="px-4 py-2 bg-gray-200 rounded-md">close</button>
-           */}
+
           <FaRegWindowClose
             size={"2rem"}
+            className=" cursor-pointer"
             onClick={() => {
               setNotesBody(initialState)
               setShowColor(false)
