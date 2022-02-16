@@ -1,12 +1,13 @@
 import { signUpPressed } from "features/user/userSlice"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
 
 export const SignUpForm = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const { error } = useSelector((state) => state.users)
+  const { error, status } = useSelector((state) => state.users)
+  const [signingUp, setSigningUp] = useState(false)
   const [signUpData, setSignUpData] = useState({
     username: "",
     email: "",
@@ -25,6 +26,11 @@ export const SignUpForm = () => {
     navigate("/")
     // alert(JSON.stringify(signUpData))
   }
+  useEffect(() => {
+    if (status === "fulfilled") {
+      setSigningUp(false)
+    }
+  }, [status])
   return (
     <div>
       <div className="main w-max m-auto mt-10">
@@ -86,25 +92,21 @@ export const SignUpForm = () => {
                 Password Does Not Match
               </div>
             )}
-          <div className="submit border rounded mb-4 bg-blue-600 text-white cursor-pointer">
-            <div className="wrapper flex w-max mx-auto">
-              {signUpData.password === confirmPass ? (
-                <input
-                  className="outline-none px-2 h-full cursor-pointer py-2 text-lg bg-transparent"
-                  type="submit"
-                  value="SignUp"
-                />
-              ) : (
-                <>
-                  <button
-                    disabled={true}
-                    className="outline-none px-2 h-full cursor-pointer py-2 text-lg "
-                  >
-                    SignUp
-                  </button>
-                </>
-              )}
-            </div>
+          <div className="">
+            {signUpData.password === confirmPass ? (
+              <input
+                className="mb-4 h-full w-full  cursor-pointer rounded border bg-transparent bg-gray-800 px-2 py-2 text-lg text-white outline-none"
+                type="submit"
+                value={`${signingUp ? "SigningUp...." : "Sign Up"}`}
+              />
+            ) : (
+              <button
+                disabled={true}
+                className="mb-4 h-full w-full  cursor-pointer rounded border bg-transparent  px-2 py-2 text-lg text-black shadow-sm outline-none"
+              >
+                SignUp
+              </button>
+            )}
           </div>
         </form>
       </div>
