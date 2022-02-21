@@ -5,8 +5,8 @@ import { getAllNotes } from "./notesSlice"
 import { resetStatus } from "features/user/userSlice"
 
 export const NotesList = () => {
-  const { notes } = useSelector((state) => state.notes)
-  const { token, isLoggedIn, status } = useSelector((state) => state.users)
+  const { notes, status } = useSelector((state) => state.notes)
+  const { token, isLoggedIn } = useSelector((state) => state.users)
   const dispatch = useDispatch()
   useEffect(() => {
     if (isLoggedIn) {
@@ -14,7 +14,7 @@ export const NotesList = () => {
     }
   }, [dispatch, isLoggedIn])
   useEffect(() => {
-    if (status === "fulfilled") {
+    if (status === "idle") {
       dispatch(getAllNotes(token))
     }
   }, [dispatch, token, status])

@@ -7,9 +7,10 @@ export const LoginForm = () => {
   const { error, token } = useSelector((state) => state.users)
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  const [loggingIn, setLoggingIn] = useState(false)
   const [loginData, setLoginData] = useState({
-    email: "",
-    password: "",
+    email: "tester@gmail.com",
+    password: "testing123",
   })
   const handleChange = (e) => {
     setLoginData({
@@ -21,12 +22,14 @@ export const LoginForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault()
     if (loginData.password !== "" && loginData.email !== "") {
+      setLoggingIn(true)
       dispatch(loginPressed(loginData))
     }
   }
 
   useEffect(() => {
     if (token) {
+      setLoggingIn(false)
       navigate("/")
     }
   }, [navigate, token])
@@ -101,29 +104,11 @@ export const LoginForm = () => {
             {error}
           </div>
 
-          <div className="submit border rounded mb-4 bg-blue-600 text-white cursor-pointer">
-            <div className="wrapper flex w-max mx-auto">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-5 my-auto"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M9 11l3-3m0 0l3 3m-3-3v8m0-13a9 9 0 110 18 9 9 0 010-18z"
-                />
-              </svg>
-              <input
-                className="outline-none px-2 h-full cursor-pointer py-2 text-lg bg-transparent"
-                type="submit"
-                value="Login"
-              />
-            </div>
-          </div>
+          <input
+            className="mb-4 h-full w-full cursor-pointer rounded border bg-transparent bg-gray-800 px-2 py-2 text-lg text-white outline-none"
+            type="submit"
+            value={`${loggingIn ? "Logging...." : "Login"}`}
+          />
         </form>
       </div>
     </div>

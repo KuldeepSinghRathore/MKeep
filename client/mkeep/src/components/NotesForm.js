@@ -7,6 +7,7 @@ import { AiOutlineCloseCircle } from "react-icons/ai"
 import { useDispatch, useSelector } from "react-redux"
 import { addNote, updateNote } from "features/notes/notesSlice"
 import { addLabelPressed } from "features/user/userSlice"
+import { toast } from "react-toastify"
 const initialState = {
   title: "",
   note: "",
@@ -28,10 +29,28 @@ export const NotesForm = ({ editMode, noteToEdit, setEditMode }) => {
   const handleSubmit = (e) => {
     e.preventDefault()
     if (editMode) {
+      toast("🦄 Updating Note!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      })
       dispatch(updateNote({ notesBody, token }))
       setEditMode(false)
     }
     if (!editMode) {
+      toast("🦄 Adding Note!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      })
       dispatch(addNote({ notesBody, token }))
       setNotesBody(initialState)
     }
@@ -55,15 +74,25 @@ export const NotesForm = ({ editMode, noteToEdit, setEditMode }) => {
             value={notesBody.title}
             onChange={handleChange}
             name="title"
+            autoFocus={true}
           />
 
           {notesBody.isPinned ? (
             <BsFillPinAngleFill
               size={"2.5em"}
               className="ml-5  mb-2 p-2 cursor-pointer"
-              onClick={() =>
+              onClick={() => {
+                toast("🦄 Pin Toggled!", {
+                  position: "top-right",
+                  autoClose: 5000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                })
                 setNotesBody({ ...notesBody, isPinned: !notesBody.isPinned })
-              }
+              }}
             />
           ) : (
             <BsPinAngle
@@ -133,6 +162,15 @@ export const NotesForm = ({ editMode, noteToEdit, setEditMode }) => {
                 className="py-1 px-2 bg-slate-200"
                 onClick={() => {
                   const label = { label: labelState }
+                  toast("🦄Adding Label!", {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                  })
                   dispatch(addLabelPressed({ label, token }))
                   setAddLabel(false)
                   setLabel("")
@@ -149,7 +187,7 @@ export const NotesForm = ({ editMode, noteToEdit, setEditMode }) => {
           )}
           <input
             type="submit"
-            value={editMode ? "Update" : "Save"}
+            value={editMode ? "Update" : "Create"}
             className="px-3 py-1 bg-gray-200 rounded-md cursor-pointer"
           />
 

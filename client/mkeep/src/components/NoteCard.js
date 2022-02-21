@@ -5,6 +5,7 @@ import { RiDeleteBin2Fill } from "react-icons/ri"
 import { deleteNote, updateNote } from "features/notes/notesSlice"
 import { useDispatch, useSelector } from "react-redux"
 import { NotesForm } from "./NotesForm"
+import { toast } from "react-toastify"
 
 export const NoteCard = ({ noteObj }) => {
   const dispatch = useDispatch()
@@ -37,6 +38,15 @@ export const NoteCard = ({ noteObj }) => {
             size={"1.5em"}
             className="cursor-pointer"
             onClick={() => {
+              toast("🦄 Unpinning...!", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+              })
               const notesBody = {
                 _id: noteObj._id,
                 isPinned: !noteObj.isPinned,
@@ -49,6 +59,15 @@ export const NoteCard = ({ noteObj }) => {
             size={"1.5em"}
             className="cursor-pointer"
             onClick={() => {
+              toast("🦄 Pinning...!", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+              })
               const notesBody = {
                 _id: noteObj._id,
                 isPinned: !noteObj.isPinned,
@@ -75,6 +94,15 @@ export const NoteCard = ({ noteObj }) => {
           size={"1.5em"}
           className="cursor-pointer"
           onClick={() => {
+            toast("🦄 Deleting...!", {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+            })
             const notesBody = {
               _id: noteObj._id,
             }
