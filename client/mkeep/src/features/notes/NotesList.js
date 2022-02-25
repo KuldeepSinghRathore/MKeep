@@ -2,22 +2,17 @@ import React, { useEffect } from "react"
 import { NoteCard } from "components/NoteCard"
 import { useDispatch, useSelector } from "react-redux"
 import { getAllNotes } from "./notesSlice"
-import { resetStatus } from "features/user/userSlice"
 
 export const NotesList = () => {
   const { notes, status } = useSelector((state) => state.notes)
-  const { token, isLoggedIn } = useSelector((state) => state.users)
+  const { token } = useSelector((state) => state.users)
   const dispatch = useDispatch()
+
   useEffect(() => {
-    if (isLoggedIn) {
-      dispatch(resetStatus())
-    }
-  }, [dispatch, isLoggedIn])
-  useEffect(() => {
-    if (status === "idle") {
+    if (token && status === "idle") {
       dispatch(getAllNotes(token))
     }
-  }, [dispatch, token, status])
+  }, [dispatch, status, token])
 
   return (
     <>

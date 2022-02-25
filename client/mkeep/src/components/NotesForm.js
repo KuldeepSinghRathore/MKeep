@@ -127,24 +127,6 @@ export const NotesForm = ({ editMode, noteToEdit, setEditMode }) => {
             ))}
           </select>
 
-          {showColor ? (
-            <CirclePicker
-              onChange={(updatedColor) => {
-                setNotesBody({ ...notesBody, color: updatedColor.hex })
-                setShowColor(false)
-              }}
-              name="color"
-              value={notesBody.color}
-              className="p-3 cursor-pointer"
-            />
-          ) : (
-            <MdOutlineColorLens
-              onClick={() => setShowColor((prev) => !prev)}
-              size={"2rem"}
-              className="mr-1 cursor-pointer"
-            />
-          )}
-
           {showAddLabel ? (
             <div className="flex">
               <input
@@ -185,11 +167,31 @@ export const NotesForm = ({ editMode, noteToEdit, setEditMode }) => {
               onClick={() => setAddLabel((prev) => !prev)}
             />
           )}
-          <input
-            type="submit"
-            value={editMode ? "Update" : "Create"}
-            className="px-3 py-1 bg-gray-200 rounded-md cursor-pointer"
-          />
+
+          {showColor ? (
+            <CirclePicker
+              onChange={(updatedColor) => {
+                setNotesBody({ ...notesBody, color: updatedColor.hex })
+                setShowColor(false)
+              }}
+              name="color"
+              value={notesBody.color}
+              className="p-3 cursor-pointer"
+            />
+          ) : (
+            <MdOutlineColorLens
+              onClick={() => setShowColor((prev) => !prev)}
+              size={"2rem"}
+              className="mr-1 cursor-pointer"
+            />
+          )}
+          {notesBody.title.length > 0 && (
+            <input
+              type="submit"
+              value={editMode ? "Update" : "Create"}
+              className="px-3 py-1 bg-gray-200 rounded-md cursor-pointer"
+            />
+          )}
 
           <FaRegWindowClose
             size={"2rem"}

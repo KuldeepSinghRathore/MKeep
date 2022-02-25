@@ -1,3 +1,4 @@
+import { clearState } from "features/notes/notesSlice"
 import React from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
@@ -23,6 +24,7 @@ export const LogOut = () => {
       <button
         className="bg-gray-500 mb-10  mt-10 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded"
         onClick={() => {
+          dispatch(clearState())
           dispatch(logOutPressed())
         }}
       >

@@ -137,7 +137,7 @@ export const userSlice = createSlice({
     },
     [loginPressed.rejected]: (state, action) => {
       state.status = "rejected"
-      state.error = action.payload.message
+      state.error = action.payload?.message
     },
     [addLabelPressed.pending]: (state) => {
       state.status = "pending"

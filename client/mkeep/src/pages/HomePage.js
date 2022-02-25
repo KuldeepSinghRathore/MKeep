@@ -8,7 +8,7 @@ import { ToastContainer } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 export const HomePage = () => {
   const { notes, status } = useSelector((state) => state.notes)
-  if (status === "pending" && notes.length === 0) {
+  if (status === "pending") {
     return <Loader />
   }
   return (
