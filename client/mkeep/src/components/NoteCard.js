@@ -21,7 +21,7 @@ export const NoteCard = ({ noteObj }) => {
     </div>
   ) : (
     <div
-      className="flex flex-col  min-w-[20rem] mx-auto md:max-w-[20rem] md:min-w-[20rem] border-solid border-2 rounded-tl-lg rounded-br-lg    m-2 shadow-md  p-5 gap-3"
+      className="flex flex-col max-w-[20rem]  min-w-[20rem] mx-auto md:max-w-[20rem] md:min-w-[20rem] border-solid border-2 rounded-tl-lg rounded-br-lg    m-2 shadow-md  p-5 gap-3"
       style={{ background: noteObj.color }}
     >
       <div className="flex justify-between">
@@ -78,8 +78,12 @@ export const NoteCard = ({ noteObj }) => {
         )}
       </div>
       <div className="text-center flex flex-col md:max-h-[10rem] md:min-h-[10rem] ">
-        <h2 className="uppercase font-semibold">{noteObj.title}</h2>
-        <p className=" text-left overflow-y-auto">{noteObj.note}</p>
+        <h2 className="uppercase font-semibold text-ellipsis overflow-hidden">
+          {noteObj.title}
+        </h2>
+        <p className=" text-left text-ellipsis overflow-hidden overflow-y-auto">
+          {noteObj.note}
+        </p>
       </div>
       <div className="flex justify-between">
         <span>
