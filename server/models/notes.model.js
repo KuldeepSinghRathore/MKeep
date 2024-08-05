@@ -12,7 +12,7 @@ const NoteSchema = new Schema(
     },
     title: {
       type: String,
-      required: true,
+      
     },
     note: {
       type: String,
